@@ -3,22 +3,21 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
-app.use(cors()); // 1. Habilitar CORS
+app.use(cors());
 app.use(express.json());
 
-// 2. Conexión a PostgreSQL
 const pool = new Pool({
-  user: 'postgres',         // Cambia por tu usuario real
+  user: 'postgres',
   host: 'localhost',
-  database: 'likeme',       // Asegúrate que la base de datos existe
-  password: '1234',// Cambia por tu contraseña real
+  database: 'likeme',
+  password: '1234',
   port: 5432,
 });
 
-// 3. Ruta GET para obtener los posts
+// Obtener todos los posts
 app.get('/posts', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM posts');
+    const result = await pool.query('SELECT * FROM posts ORDER BY id ASC');
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -26,9 +25,10 @@ app.get('/posts', async (req, res) => {
   }
 });
 
-// 4. Ruta POST para crear un nuevo post
+// Crear un nuevo post
 app.post('/posts', async (req, res) => {
-  const { titulo, img, descripcion } = req.body;
+  const { titulo, descripcion } = req.body;
+  const img = req.body.img || req.body.url; // acepta ambos nombres
   try {
     const result = await pool.query(
       'INSERT INTO posts (titulo, img, descripcion, likes) VALUES ($1, $2, $3, 0) RETURNING *',
@@ -41,6 +41,7 @@ app.post('/posts', async (req, res) => {
   }
 });
 
+// Eliminar un post
 app.delete('/posts/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -52,6 +53,7 @@ app.delete('/posts/:id', async (req, res) => {
   }
 });
 
+// Dar like a un post
 app.put('/posts/like/:id', async (req, res) => {
   const { id } = req.params;
   try {

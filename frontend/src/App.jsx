@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Form from "./components/Form";
 import Post from "./components/Post";
 
@@ -7,7 +7,7 @@ const urlBaseServer = "http://localhost:3000";
 
 function App() {
   const [titulo, setTitulo] = useState("");
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrc, setImgSRC] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [posts, setPosts] = useState([]);
 
@@ -17,7 +17,7 @@ function App() {
   };
 
   const agregarPost = async () => {
-    const post = { titulo, img: imgSrc, descripcion };
+    const post = { titulo, url: imgSrc, descripcion };
     await axios.post(urlBaseServer + "/posts", post);
     getPosts();
   };
@@ -45,15 +45,15 @@ function App() {
         <div className="col-12 col-sm-4">
           <Form
             setTitulo={setTitulo}
-            setImgSrc={setImgSrc}
+            setImgSRC={setImgSRC}
             setDescripcion={setDescripcion}
             agregarPost={agregarPost}
           />
         </div>
         <div className="col-12 col-sm-8 px-5 row posts align-items-start">
-          {posts.map((post) => (
+          {posts.map((post, i) => (
             <Post
-              key={post.id} // Usa el id del post
+              key={i}
               post={post}
               like={like}
               eliminarPost={eliminarPost}
