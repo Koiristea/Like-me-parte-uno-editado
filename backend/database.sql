@@ -1,3 +1,5 @@
+--Acceder a la consola de PostgreSQL
+psql -U postgres
 
 --Crear la base de datos
 CREATE DATABASE likeme;
