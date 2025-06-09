@@ -12,7 +12,6 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Rutas usando los controladores
 app.get("/posts", getPosts)
 app.post("/posts", createPost)
 app.delete("/posts/:id", deletePost)
