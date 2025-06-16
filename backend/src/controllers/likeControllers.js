@@ -36,6 +36,10 @@ const createPost = async (req, res) => {
 const deletePost = async (req, res) => {
   const { id } = req.params
   try {
+    const result = await pool.query("SELECT * FROM posts WHERE id = $1", [id])
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Post no encontrado" })
+    }
     await pool.query("DELETE FROM posts WHERE id = $1", [id])
     res.status(200).json({ message: "Post eliminado" })
   } catch (error) {
@@ -47,6 +51,10 @@ const deletePost = async (req, res) => {
 const likePost = async (req, res) => {
   const { id } = req.params
   try {
+    const result = await pool.query("SELECT * FROM posts WHERE id = $1", [id])
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Post no encontrado" })
+    }
     await pool.query("UPDATE posts SET likes = likes + 1 WHERE id = $1", [id])
     res.status(200).json({ message: "Like agregado" })
   } catch (error) {
